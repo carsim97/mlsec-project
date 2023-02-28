@@ -85,10 +85,6 @@ def run_attack(x, y, models):
             # adv_X = adv_ds_tmp.X
             # adv_X.save('./adv_example_X_all', overwrite=True)
 
-        # # Assess surrogate models' accuracy against adversarial examples
-        # accuracy = metric.performance_score(y, y_pred)
-        # print("Model" + str(i+1) + " Accuracy after attack: " + str(accuracy))
-
         adv_ds.append(adv_ds_tmp)
 
     x_tmp = CArray.concatenate(x, x, axis=0)
