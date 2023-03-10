@@ -93,7 +93,7 @@ def run_attack(x, y, models, xi, min_advx_to_create):
     adv_x = []
 
     # UAP algorithm (Moosavi-Dezfooli, 2016)
-    # Stop condition: meet a target accuracy (default: 0.9)
+    # Stop condition: meet a target accuracy (in this case, I want to create at least 100 adversarial examples)
     while fooling_rate <= min_advx_to_create/x.shape[0]:
         for i in range(x.shape[0]):
             print('Sample', str(i+1), 'of', str(x.shape[0]))
@@ -201,19 +201,19 @@ if __name__ == '__main__':
                         'Huang2021Exploring_ema']
     surr_models = load_models(surr_model_names, model_type='surr')
 
-    # Load CIFAR10 test set
+    # Load CIFAR10 test set (10000 samples)
     x0, y0 = load_cifar10()
     x0 = x0[:, :]
     y0 = y0[:]
 
-    # Keep only correctly classified samples
+    # Keep only correctly classified samples (8178 samples)
     x0, y0 = discard_miscl(x0, y0, surr_models)
     x0 = x0[:, :]
     y0 = y0[:]
     print("N. of adversarial examples to generate: {}".format(x0.shape[0]))
 
+    # Run UAP attack on 8178 samples (wanting to get at least 100 adversarial examples)
     xi = 0.01
-
     min_advx_to_create = 100
     x0, y0, adv_x = run_attack(x0, y0, surr_models, xi, min_advx_to_create)
 
