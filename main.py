@@ -21,10 +21,10 @@ def load_models(names, model_type):
     return models
 
 
-# This attack is based on the PGD algorithm; the only difference is that the gradient is computed using the sum of each
-# loss related to each surrogate model.
+# This attack is based on the PGD algorithm; the only difference is that the gradient is computed
+# using the sum of each loss related to each surrogate model.
 # In this way, it is possible to fool multiple models at the same time with a single perturbed sample.
-def run_attack(ds, epsilons, alpha, steps, n_adv):
+def run_attack(ds, clfs, epsilons, alpha, steps, n_adv):
     x_true = []
     y_true = []
     x_advs = []
@@ -43,7 +43,7 @@ def run_attack(ds, epsilons, alpha, steps, n_adv):
         for i in range(steps):
             scores = []
             total_loss = 0
-            for clf in surr_models:
+            for clf in clfs:
                 sc = clf(x_adv)
 
                 # If clean sample is misclassified by any of the classifiers, then discard it
@@ -172,10 +172,10 @@ if __name__ == "__main__":
     iterations = 50
     eps = 0.25
     step_size = 0.1*eps
-    n_advx = 100
+    n_advx = 6
 
     # Run attack
-    x0, y0, advx = run_attack(dataset, epsilons=eps, alpha=step_size, steps=iterations, n_adv=n_advx)
+    x0, y0, advx = run_attack(dataset, clfs=surr_models, epsilons=eps, alpha=step_size, steps=iterations, n_adv=n_advx)
 
     # img_idx = 0
     # compare_images(x0, y0, advx, surr_models, img_idx)
