@@ -80,7 +80,7 @@ def run_attack(ds, clfs, epsilons, alpha, steps, n_adv):
             x_adv.grad.data.zero_()
 
         # If advx does not bypass all the surrogate models at the same time, then discard it
-        for clf in models:
+        for clf in clfs:
             sc = clf(x_adv)
             if sc.argmax(dim=-1) == y:
                 invalid = True
