@@ -41,7 +41,6 @@ def run_attack(ds, clfs, epsilons, alpha, steps, n_adv):
         invalid = False
 
         for i in range(steps):
-            scores = []
             total_loss = 0
             for clf in clfs:
                 sc = clf(x_adv)
@@ -52,7 +51,6 @@ def run_attack(ds, clfs, epsilons, alpha, steps, n_adv):
                     print("Sample {} of {}: discarded".format(sample_idx, len(ds)))
                     break
 
-                scores.append(sc)
                 # Sum losses computed by each model
                 loss_val = loss(sc, torch.LongTensor([y]))
                 total_loss += loss_val
@@ -82,7 +80,8 @@ def run_attack(ds, clfs, epsilons, alpha, steps, n_adv):
             x_adv.grad.data.zero_()
 
         # If advx does not bypass all the surrogate models at the same time, then discard it
-        for sc in scores:
+        for clf in models:
+            sc = clf(x_adv)
             if sc.argmax(dim=-1) == y:
                 invalid = True
                 print("Sample {} of {}: discarded".format(sample_idx, len(ds)))
