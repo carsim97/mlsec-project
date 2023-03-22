@@ -171,7 +171,7 @@ if __name__ == "__main__":
     iterations = 50
     eps = 0.25
     step_size = 0.1*eps
-    n_advx = 6
+    n_advx = 100
 
     # Run attack
     x0, y0, advx = run_attack(dataset, clfs=surr_models, epsilons=eps, alpha=step_size, steps=iterations, n_adv=n_advx)
